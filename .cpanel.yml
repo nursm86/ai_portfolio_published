@@ -2,9 +2,10 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/nurislamho/portfolio
-    - if [ -f $DEPLOYPATH/.env.production ]; then cp $DEPLOYPATH/.env.production /tmp/.env_prod_backup; fi
-    - rm -rf $DEPLOYPATH/*
-    - rm -rf $DEPLOYPATH/.next
-    - /bin/cp -R * $DEPLOYPATH/
-    - /bin/cp -R .next $DEPLOYPATH/
-    - if [ -f /tmp/.env_prod_backup ]; then cp /tmp/.env_prod_backup $DEPLOYPATH/.env.production && rm /tmp/.env_prod_backup; fi
+    - if [ -f $DEPLOYPATH/.env ]; then cp $DEPLOYPATH/.env /tmp/.env_backup; fi
+    - rm -rf $DEPLOYPATH/.next $DEPLOYPATH/public $DEPLOYPATH/server.js $DEPLOYPATH/deploy.command
+    - /bin/cp server.js $DEPLOYPATH/
+    - /bin/cp -R .next $DEPLOYPATH/.next
+    - /bin/cp -R public $DEPLOYPATH/public
+    - /bin/cp -R node_modules/* $DEPLOYPATH/node_modules/ 2>/dev/null || true
+    - if [ -f /tmp/.env_backup ]; then cp /tmp/.env_backup $DEPLOYPATH/.env && rm /tmp/.env_backup; fi
