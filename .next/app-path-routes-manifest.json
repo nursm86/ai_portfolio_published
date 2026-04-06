@@ -1,7 +1,0 @@
-{
-  "/api/github-stars/route": "/api/github-stars",
-  "/_not-found/page": "/_not-found",
-  "/api/chat/route": "/api/chat",
-  "/page": "/",
-  "/chat/page": "/chat"
-}
