@@ -2,6 +2,6 @@
   "/api/github-stars/route": "/api/github-stars",
   "/_not-found/page": "/_not-found",
   "/api/chat/route": "/api/chat",
-  "/chat/page": "/chat",
-  "/page": "/"
+  "/page": "/",
+  "/chat/page": "/chat"
 }
