@@ -1,6 +1,6 @@
 {
-  "/api/github-stars/route": "/api/github-stars",
   "/_not-found/page": "/_not-found",
+  "/api/github-stars/route": "/api/github-stars",
   "/api/chat/route": "/api/chat",
   "/chat/page": "/chat",
   "/page": "/"
