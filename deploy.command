@@ -30,7 +30,7 @@ echo ""
 echo "[2/4] Cleaning old published files..."
 cd "$PUBLISH_DIR"
 # Remove everything except .git, .gitattributes, and this script
-find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name '.gitattributes' ! -name 'deploy.command' -exec rm -rf {} +
+find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name '.gitattributes' ! -name '.cpanel.yml' ! -name 'deploy.command' -exec rm -rf {} +
 echo "Cleaned."
 echo ""
 

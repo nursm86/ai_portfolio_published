@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/nurislamho/portfolio
+    - /bin/cp -R * $DEPLOYPATH/
+    - /bin/cp -R .next $DEPLOYPATH/
