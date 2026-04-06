@@ -37,12 +37,13 @@ echo ""
 # ---- Step 3: Copy standalone build ----
 echo "[3/4] Copying standalone build..."
 
-# Copy standalone server
-cp -r "$SOURCE_DIR/.next/standalone/"* "$PUBLISH_DIR/"
+# Copy standalone server (including .next hidden folder)
+cp -R "$SOURCE_DIR/.next/standalone/"* "$PUBLISH_DIR/"
+cp -R "$SOURCE_DIR/.next/standalone/.next" "$PUBLISH_DIR/.next"
 
 # Copy static assets (not included in standalone)
 mkdir -p "$PUBLISH_DIR/.next/static"
-cp -r "$SOURCE_DIR/.next/static/"* "$PUBLISH_DIR/.next/static/"
+cp -R "$SOURCE_DIR/.next/static/"* "$PUBLISH_DIR/.next/static/"
 
 # Copy public folder
 if [ -d "$SOURCE_DIR/public" ]; then

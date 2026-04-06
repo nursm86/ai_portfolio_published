@@ -2,7 +2,9 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/nurislamho/portfolio
+    - if [ -f $DEPLOYPATH/.env.production ]; then cp $DEPLOYPATH/.env.production /tmp/.env_prod_backup; fi
     - rm -rf $DEPLOYPATH/*
     - rm -rf $DEPLOYPATH/.next
     - /bin/cp -R * $DEPLOYPATH/
     - /bin/cp -R .next $DEPLOYPATH/
+    - if [ -f /tmp/.env_prod_backup ]; then cp /tmp/.env_prod_backup $DEPLOYPATH/.env.production && rm /tmp/.env_prod_backup; fi
