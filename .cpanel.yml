@@ -2,5 +2,7 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/nurislamho/portfolio
+    - rm -rf $DEPLOYPATH/*
+    - rm -rf $DEPLOYPATH/.next
     - /bin/cp -R * $DEPLOYPATH/
     - /bin/cp -R .next $DEPLOYPATH/
