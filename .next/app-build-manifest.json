@@ -7,6 +7,13 @@
       "static/chunks/main-app-6dda8010f4385e8a.js",
       "static/chunks/app/_not-found/page-c45416bf91dc6e27.js"
     ],
+    "/api/github-stars/route": [
+      "static/chunks/webpack-cd32a8bf8b9bf276.js",
+      "static/chunks/4bd1b696-0107adcc5512ba60.js",
+      "static/chunks/684-1ca82a03ef620b2e.js",
+      "static/chunks/main-app-6dda8010f4385e8a.js",
+      "static/chunks/app/api/github-stars/route-b64d5c176ab09c27.js"
+    ],
     "/layout": [
       "static/chunks/webpack-cd32a8bf8b9bf276.js",
       "static/chunks/4bd1b696-0107adcc5512ba60.js",
@@ -15,13 +22,6 @@
       "static/css/91910c1f55da0a84.css",
       "static/chunks/671-a30b51438b07b42b.js",
       "static/chunks/app/layout-3ca8889f9b9e9e65.js"
-    ],
-    "/api/github-stars/route": [
-      "static/chunks/webpack-cd32a8bf8b9bf276.js",
-      "static/chunks/4bd1b696-0107adcc5512ba60.js",
-      "static/chunks/684-1ca82a03ef620b2e.js",
-      "static/chunks/main-app-6dda8010f4385e8a.js",
-      "static/chunks/app/api/github-stars/route-b64d5c176ab09c27.js"
     ],
     "/api/chat/route": [
       "static/chunks/webpack-cd32a8bf8b9bf276.js",
