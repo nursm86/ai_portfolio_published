@@ -16,7 +16,6 @@ import {
   BLUE,
   type AIType,
   type GamePhase,
-  type HexGameState,
   type PlayerColor,
   type Cell,
 } from '@/lib/hex/types';
@@ -320,6 +319,18 @@ export default function HexGame() {
             exit={{ opacity: 0 }}
             className="flex flex-col items-center gap-4 w-full"
           >
+            {/* Game mode label */}
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-red-400 font-medium">You (Red)</span>
+              <span className="text-neutral-500">vs</span>
+              <span className="text-blue-400 font-medium">
+                {{ complex: 'Noob AI', montecarlo: 'Smart AI', minimax: 'Genius AI', random: 'Random AI', heuristic: 'Heuristic AI' }[state.aiType]}
+                {' '}(Blue)
+              </span>
+              <span className="text-neutral-600 text-xs ml-1">
+                {state.boardSize}×{state.boardSize}
+              </span>
+            </div>
             <HexBoard
               board={state.board}
               boardSize={state.boardSize}

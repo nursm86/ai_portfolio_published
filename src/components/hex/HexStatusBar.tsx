@@ -58,19 +58,24 @@ export default function HexStatusBar({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-2"
+            className="flex flex-col items-center gap-2"
           >
-            <div className="flex gap-1">
-              {[0, 1, 2].map((i) => (
-                <motion.div
-                  key={i}
-                  className={`h-2 w-2 rounded-full ${dotColor}`}
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-                />
-              ))}
+            <div className="flex items-center gap-3">
+              <motion.div
+                className={`h-3 w-3 rounded-full ${dotColor}`}
+                animate={{ scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <span className="text-sm font-medium text-neutral-300">AI is thinking...</span>
             </div>
-            <span className="text-sm text-neutral-400">AI is thinking...</span>
+            <div className="w-32 h-1 rounded-full bg-neutral-800 overflow-hidden">
+              <motion.div
+                className={`h-full rounded-full ${dotColor.replace('bg-', 'bg-')}`}
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ width: '50%' }}
+              />
+            </div>
           </motion.div>
         ) : (
           <motion.div
