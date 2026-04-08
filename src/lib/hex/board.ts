@@ -159,6 +159,101 @@ export class Board {
   }
 
   /**
+   * Returns the winning path as an array of flat indices, or empty if no win.
+   * Uses BFS with parent tracking to reconstruct the shortest winning path.
+   */
+  getWinningPath(playerType: PlayerColor): number[] {
+    const bs = this.boardSize;
+    const parent = new Int32Array(bs * bs).fill(-1);
+    const visited = new Uint8Array(bs * bs);
+    const queue: number[] = [];
+
+    if (playerType === RED) {
+      // Red: top → bottom
+      for (let c = 0; c < bs; c++) {
+        if (this.grid[c] === playerType) {
+          queue.push(c);
+          visited[c] = 1;
+          parent[c] = c; // self = start node
+        }
+      }
+      let head = 0;
+      while (head < queue.length) {
+        const idx = queue[head++];
+        const x = Math.floor(idx / bs);
+        const y = idx % bs;
+
+        if (x === bs - 1) {
+          // Reconstruct path
+          const path: number[] = [];
+          let cur = idx;
+          while (parent[cur] !== cur) {
+            path.push(cur);
+            cur = parent[cur];
+          }
+          path.push(cur);
+          return path;
+        }
+
+        for (let i = 0; i < 6; i++) {
+          const nx = x + DX[i];
+          const ny = y + DY[i];
+          if (nx >= 0 && ny >= 0 && nx < bs && ny < bs) {
+            const nidx = nx * bs + ny;
+            if (!visited[nidx] && this.grid[nidx] === playerType) {
+              visited[nidx] = 1;
+              parent[nidx] = idx;
+              queue.push(nidx);
+            }
+          }
+        }
+      }
+    } else {
+      // Blue: left → right
+      for (let r = 0; r < bs; r++) {
+        const idx = r * bs;
+        if (this.grid[idx] === playerType) {
+          queue.push(idx);
+          visited[idx] = 1;
+          parent[idx] = idx;
+        }
+      }
+      let head = 0;
+      while (head < queue.length) {
+        const idx = queue[head++];
+        const x = Math.floor(idx / bs);
+        const y = idx % bs;
+
+        if (y === bs - 1) {
+          const path: number[] = [];
+          let cur = idx;
+          while (parent[cur] !== cur) {
+            path.push(cur);
+            cur = parent[cur];
+          }
+          path.push(cur);
+          return path;
+        }
+
+        for (let i = 0; i < 6; i++) {
+          const nx = x + DX[i];
+          const ny = y + DY[i];
+          if (nx >= 0 && ny >= 0 && nx < bs && ny < bs) {
+            const nidx = nx * bs + ny;
+            if (!visited[nidx] && this.grid[nidx] === playerType) {
+              visited[nidx] = 1;
+              parent[nidx] = idx;
+              queue.push(nidx);
+            }
+          }
+        }
+      }
+    }
+
+    return [];
+  }
+
+  /**
    * Returns flat-array indices of all neighbors of (x, y) that match playerType.
    */
   getNeighbours(playerType: PlayerColor, x: number, y: number): number[] {

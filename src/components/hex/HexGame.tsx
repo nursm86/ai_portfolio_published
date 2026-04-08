@@ -165,7 +165,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-function checkWinFromBoard(board: number[], boardSize: number, player: PlayerColor): boolean {
+function checkWinFromBoard(board: number[], boardSize: number, player: PlayerColor): { won: boolean; path: number[] } {
   const b = new Board(boardSize);
   for (let r = 0; r < boardSize; r++) {
     for (let c = 0; c < boardSize; c++) {
@@ -173,7 +173,10 @@ function checkWinFromBoard(board: number[], boardSize: number, player: PlayerCol
       if (v !== 0) b.forcePlace(v as PlayerColor, r, c);
     }
   }
-  return b.checkWin(player) === player;
+  if (b.checkWin(player) === player) {
+    return { won: true, path: b.getWinningPath(player) };
+  }
+  return { won: false, path: [] };
 }
 
 function getAIMove(board: number[], boardSize: number, availableMoves: Cell[], player: PlayerColor, aiType: AIType) {
@@ -221,9 +224,10 @@ export default function HexGame() {
     if (state.gamePhase !== 'playing' && state.gamePhase !== 'thinking') return;
     if (state.lastMove === null) return;
 
-    const lastPlayer = state.turn === RED ? BLUE : RED; // The player who just moved
-    if (checkWinFromBoard(state.board, state.boardSize, lastPlayer)) {
-      dispatch({ type: 'GAME_OVER', winner: lastPlayer });
+    const lastPlayer = (state.turn === RED ? BLUE : RED) as PlayerColor; // The player who just moved
+    const result = checkWinFromBoard(state.board, state.boardSize, lastPlayer);
+    if (result.won) {
+      dispatch({ type: 'GAME_OVER', winner: lastPlayer, path: result.path });
       return;
     }
 
