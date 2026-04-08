@@ -11,6 +11,7 @@ import {
   Car,
   Cloud,
   Globe,
+  Hexagon,
   Laugh,
   Layers,
   Moon,
@@ -31,6 +32,7 @@ const currentActivities = [
   { label: "Building globalpsychicsassociation.com platform", icon: Globe, color: "#3B82F6" },
   { label: "Working with open source AI models", icon: Sparkles, color: "#A855F7" },
   { label: "V2V Negotiation research for autonomous vehicles at WSU", icon: Car, color: "#10B981" },
+  { label: "Play Hex against my AI", icon: Hexagon, color: "#EF4444", href: "/hex" },
 ];
 
 /* ---------- quick-question data ---------- */
@@ -167,20 +169,24 @@ export default function Home() {
           What I&#39;m up to
         </p>
         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
-          {currentActivities.map(({ label, icon: Icon, color }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + i * 0.08 }}
-              className="flex min-w-[160px] max-w-[200px] shrink-0 items-center gap-2.5 rounded-xl border border-neutral-200 bg-white/30 px-3 py-2.5 backdrop-blur-lg dark:border-neutral-700 dark:bg-neutral-800/50"
-            >
-              <Icon size={16} strokeWidth={2} color={color} className="shrink-0" />
-              <span className="text-[11px] leading-tight font-medium text-neutral-700 dark:text-neutral-300">
-                {label}
-              </span>
-            </motion.div>
-          ))}
+          {currentActivities.map(({ label, icon: Icon, color, href }, i) => {
+            const card = (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.08 }}
+                className={`flex min-w-[160px] max-w-[200px] shrink-0 items-center gap-2.5 rounded-xl border border-neutral-200 bg-white/30 px-3 py-2.5 backdrop-blur-lg dark:border-neutral-700 dark:bg-neutral-800/50 ${href ? 'cursor-pointer hover:bg-white/50 dark:hover:bg-neutral-700/50 transition-colors' : ''}`}
+                onClick={href ? () => router.push(href) : undefined}
+              >
+                <Icon size={16} strokeWidth={2} color={color} className="shrink-0" />
+                <span className="text-[11px] leading-tight font-medium text-neutral-700 dark:text-neutral-300">
+                  {label}
+                </span>
+              </motion.div>
+            );
+            return card;
+          })}
         </div>
       </motion.div>
 
@@ -235,6 +241,31 @@ export default function Home() {
             </Button>
           ))}
         </div>
+
+        {/* Try my work */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-4 flex flex-wrap justify-center gap-3"
+        >
+          <button
+            onClick={() => router.push('/hex')}
+            className="flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/50 px-5 py-2 text-sm text-neutral-400 backdrop-blur-lg transition-all hover:border-neutral-500 hover:text-neutral-200"
+          >
+            <Hexagon size={14} className="text-red-400" />
+            Beat my AI? Try Hex
+            <ArrowRight size={14} />
+          </button>
+          <button
+            onClick={() => router.push('/architecture')}
+            className="flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/50 px-5 py-2 text-sm text-neutral-400 backdrop-blur-lg transition-all hover:border-neutral-500 hover:text-neutral-200"
+          >
+            <Cloud size={14} className="text-amber-400" />
+            How this site works
+            <ArrowRight size={14} />
+          </button>
+        </motion.div>
       </motion.div>
       <FluidCursor />
     </div>
