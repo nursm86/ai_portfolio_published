@@ -4,9 +4,11 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
     unoptimized: true,
-    domains: ['images.unsplash.com', 'assets.aceternity.com'],
+    remotePatterns: [
+      { hostname: 'images.unsplash.com' },
+      { hostname: 'assets.aceternity.com' },
+    ],
   },
-  eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 };
 
