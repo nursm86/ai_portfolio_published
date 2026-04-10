@@ -1,5 +1,6 @@
 'use client';
 import { useChat } from '@ai-sdk/react';
+import type { UIMessage } from 'ai';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
@@ -47,33 +48,6 @@ interface AvatarProps {
 const Avatar = dynamic<AvatarProps>(
   () =>
     Promise.resolve(({ hasActiveTool, videoRef, isTalking }: AvatarProps) => {
-      // This function will only execute on the client
-      const isIOS = () => {
-        // Multiple detection methods
-        const userAgent = window.navigator.userAgent;
-        const platform = window.navigator.platform;
-        const maxTouchPoints = window.navigator.maxTouchPoints || 0;
-
-        // UserAgent-based check
-        const isIOSByUA =
-          //@ts-ignore
-          /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
-        // Platform-based check
-        const isIOSByPlatform = /iPad|iPhone|iPod/.test(platform);
-
-        // iPad Pro check
-        const isIPadOS =
-          //@ts-ignore
-          platform === 'MacIntel' && maxTouchPoints > 1 && !window.MSStream;
-
-        // Safari check
-        const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-
-        return isIOSByUA || isIOSByPlatform || isIPadOS || isSafari;
-      };
-
-      // Conditional rendering based on detection
       return (
         <div
           className={`flex items-center justify-center rounded-full transition-all duration-300 ${hasActiveTool ? 'h-20 w-20' : 'h-28 w-28'}`}
@@ -122,56 +96,53 @@ const Chat = () => {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('query');
   const [autoSubmitted, setAutoSubmitted] = useState(false);
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
+  const [input, setInput] = useState('');
 
   const {
     messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
+    sendMessage,
+    status,
     stop,
     setMessages,
-    setInput,
-    reload,
+    regenerate,
     addToolResult,
-    append,
   } = useChat({
-    onResponse: (response) => {
-      if (response) {
-        setLoadingSubmit(false);
-        setIsTalking(true);
-        if (videoRef.current) {
-          videoRef.current.play().catch((error) => {
-            console.error('Failed to play video:', error);
-          });
-        }
-      }
-    },
     onFinish: () => {
-      setLoadingSubmit(false);
       setIsTalking(false);
       if (videoRef.current) {
         videoRef.current.pause();
       }
     },
     onError: (error) => {
-      setLoadingSubmit(false);
       setIsTalking(false);
       if (videoRef.current) {
         videoRef.current.pause();
       }
-      console.error('Chat error:', error.message, error.cause);
+      console.error('Chat error:', error.message);
       toast.error(`Error: ${error.message}`);
-    },
-    onToolCall: (tool) => {
-      const toolName = tool.toolCall.toolName;
-      console.log('Tool call:', toolName);
     },
   });
 
-  // Compute hasActiveTool from the latest assistant message (for avatar sizing)
+  const isLoading = status === 'submitted' || status === 'streaming';
+
+  // Start talking when streaming begins
+  useEffect(() => {
+    if (status === 'streaming' && !isTalking) {
+      setIsTalking(true);
+      if (videoRef.current) {
+        videoRef.current.play().catch(console.error);
+      }
+    }
+    if (status === 'ready' && isTalking) {
+      setIsTalking(false);
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+    }
+  }, [status, isTalking]);
+
+  // Compute hasActiveTool from the latest assistant message
   const { hasActiveTool, latestExchangeStartIndex } = useMemo(() => {
     const latestAIIdx = messages.findLastIndex((m) => m.role === 'assistant');
     const latestUserIdx = messages.findLastIndex((m) => m.role === 'user');
@@ -180,14 +151,14 @@ const Chat = () => {
     if (latestAIIdx !== -1 && latestAIIdx > latestUserIdx) {
       activeTool =
         messages[latestAIIdx].parts?.some(
-          (part) =>
-            part.type === 'tool-invocation' &&
-            part.toolInvocation?.state === 'result'
+          (part: any) =>
+            typeof part.type === 'string' &&
+            part.type.startsWith('tool-') &&
+            part.type !== 'tool-invocation' &&
+            part.state === 'output-available'
         ) || false;
     }
 
-    // The latest exchange starts at the latest user message
-    // (or the latest AI message if there's no user message after it)
     const exchangeStart = latestUserIdx !== -1 ? latestUserIdx : latestAIIdx;
 
     return {
@@ -206,39 +177,34 @@ const Chat = () => {
     }
   }, []);
 
-  // Auto-scroll when messages change or loading state changes
   useEffect(() => {
     scrollToBottom();
-  }, [messages, loadingSubmit, scrollToBottom]);
+  }, [messages, scrollToBottom]);
 
   const isToolInProgress = messages.some(
     (m) =>
       m.role === 'assistant' &&
       m.parts?.some(
-        (part) =>
-          part.type === 'tool-invocation' &&
-          part.toolInvocation?.state !== 'result'
+        (part: any) =>
+          typeof part.type === 'string' &&
+          part.type.startsWith('tool-') &&
+          part.type !== 'tool-invocation' &&
+          part.state !== 'output-available' &&
+          part.state !== 'output-error'
       )
   );
 
-  //@ts-ignore
-  const submitQuery = (query) => {
+  const submitQuery = useCallback((query: string) => {
     if (!query.trim()) return;
-    // Only clear messages when cancelling an in-flight request
     if (isLoading || isToolInProgress) {
       stop();
       setMessages([]);
     }
-    setLoadingSubmit(true);
-    setIsTalking(false);
-    // Small delay to let state settle before appending
+    setInput('');
     setTimeout(() => {
-      append({
-        role: 'user',
-        content: query,
-      });
+      sendMessage({ text: query });
     }, 50);
-  };
+  }, [isLoading, isToolInProgress, stop, setMessages, sendMessage]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -250,44 +216,25 @@ const Chat = () => {
 
     if (initialQuery && !autoSubmitted) {
       setAutoSubmitted(true);
-      setInput('');
       submitQuery(initialQuery);
     }
-  }, [initialQuery, autoSubmitted]);
+  }, [initialQuery, autoSubmitted, submitQuery]);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      if (isTalking) {
-        videoRef.current.play().catch((error) => {
-          console.error('Failed to play video:', error);
-        });
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  }, [isTalking]);
-
-  //@ts-ignore
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = useCallback(() => {
     if (!input.trim() || isToolInProgress) return;
     submitQuery(input);
-    setInput('');
-  };
+  }, [input, isToolInProgress, submitQuery]);
 
   const handleStop = () => {
     stop();
-    setLoadingSubmit(false);
     setIsTalking(false);
     if (videoRef.current) {
       videoRef.current.pause();
     }
   };
 
-  // Check if this is the initial empty state (no messages)
-  const isEmptyState = messages.length === 0 && !loadingSubmit;
+  const isEmptyState = messages.length === 0 && !isLoading;
 
-  // Calculate header height based on hasActiveTool
   const headerHeight = hasActiveTool ? 100 : 140;
 
   return (
@@ -313,10 +260,7 @@ const Chat = () => {
       {/* Fixed Avatar Header with Gradient */}
       <div
         className="fixed top-0 right-0 left-0 z-50"
-        style={{
-          background:
-            'var(--header-gradient)',
-        }}
+        style={{ background: 'var(--header-gradient)' }}
       >
         <div
           className={`transition-all duration-300 ease-in-out ${hasActiveTool ? 'pt-6 pb-0' : 'py-4'}`}
@@ -335,7 +279,6 @@ const Chat = () => {
 
       {/* Main Content Area */}
       <div className="container mx-auto flex h-full max-w-3xl flex-col">
-        {/* Scrollable Chat Content */}
         <div
           ref={scrollContainerRef}
           className="flex-1 overflow-y-auto px-2"
@@ -351,8 +294,7 @@ const Chat = () => {
             </motion.div>
           ) : (
             <div className="flex flex-col gap-4 pb-4">
-              {/* Render ALL messages in conversation history */}
-              {messages.map((message, index) => {
+              {messages.map((message: UIMessage, index: number) => {
                 const isLatestExchange = index >= latestExchangeStartIndex;
 
                 if (message.role === 'user') {
@@ -370,7 +312,6 @@ const Chat = () => {
                             message={message}
                             isLast={false}
                             isLoading={false}
-                            reload={() => Promise.resolve(null)}
                           />
                         </ChatBubbleMessage>
                       </ChatBubble>
@@ -387,7 +328,7 @@ const Chat = () => {
                       <SimplifiedChatView
                         message={message}
                         isLoading={isLoading && index === messages.length - 1}
-                        reload={reload}
+                        regenerate={() => regenerate()}
                         addToolResult={addToolResult}
                       />
                     </div>
@@ -397,8 +338,8 @@ const Chat = () => {
                 return null;
               })}
 
-              {/* Loading indicator when waiting for AI response */}
-              {loadingSubmit && !messages.some(
+              {/* Loading indicator */}
+              {isLoading && !messages.some(
                 (m, i) => m.role === 'assistant' && i === messages.length - 1
               ) && (
                 <motion.div
@@ -415,7 +356,6 @@ const Chat = () => {
                 </motion.div>
               )}
 
-              {/* Auto-scroll anchor */}
               <div ref={chatEndRef} />
             </div>
           )}
@@ -427,8 +367,8 @@ const Chat = () => {
             <HelperBoost submitQuery={submitQuery} setInput={setInput} />
             <ChatBottombar
               input={input}
-              handleInputChange={handleInputChange}
-              handleSubmit={onSubmit}
+              onInputChange={setInput}
+              onSubmit={onSubmit}
               isLoading={isLoading}
               stop={handleStop}
               isToolInProgress={isToolInProgress}

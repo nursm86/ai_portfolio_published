@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { streamText, convertToModelMessages, stepCountIs } from 'ai';
 import { SYSTEM_PROMPT } from './prompt';
 import { getContact } from './tools/getContact';
 import { getCrazy } from './tools/getCrazy';
@@ -12,26 +12,9 @@ import { getSports } from './tools/getSport';
 
 export const maxDuration = 30;
 
-// ❌ Pas besoin de l'export ici, Next.js n'aime pas ça
-function errorHandler(error: unknown) {
-  if (error == null) {
-    return 'Unknown error';
-  }
-  if (typeof error === 'string') {
-    return error;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return JSON.stringify(error);
-}
-
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    console.log('[CHAT-API] Incoming messages:', messages);
-
-    messages.unshift(SYSTEM_PROMPT);
 
     const tools = {
       getProjects,
@@ -45,21 +28,20 @@ export async function POST(req: Request) {
     };
 
     const result = streamText({
-      model: openai('gpt-5-nano'),
-      messages,
-      toolCallStreaming: true,
+      model: openai('gpt-4o-mini'),
+      system: SYSTEM_PROMPT.content,
+      messages: await convertToModelMessages(messages),
       tools,
-      maxSteps: 2,
+      stopWhen: stepCountIs(2),
       temperature: 1,
     });
 
-
-    return result.toDataStreamResponse({
-      getErrorMessage: errorHandler,
-    });
+    return result.toUIMessageStreamResponse();
   } catch (err) {
     console.error('Global error:', err);
-    const errorMessage = errorHandler(err);
-    return new Response(errorMessage, { status: 500 });
+    return new Response(
+      err instanceof Error ? err.message : String(err),
+      { status: 500 }
+    );
   }
 }

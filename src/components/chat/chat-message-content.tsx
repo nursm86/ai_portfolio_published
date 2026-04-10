@@ -1,6 +1,6 @@
 'use client';
 
-import { Message } from 'ai/react';
+import type { UIMessage } from 'ai';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -12,24 +12,20 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 export type ChatMessageContentProps = {
-  message: Message;
+  message: UIMessage;
   isLast?: boolean;
   isLoading?: boolean;
-  reload?: () => Promise<string | null | undefined>;
-  addToolResult?: (args: { toolCallId: string; result: string }) => void;
   skipToolRendering?: boolean;
 };
 
 const CodeBlock = ({ content }: { content: string }) => {
   const [isOpen, setIsOpen] = useState(true);
 
-  // Extract language if present in the first line
   const firstLineBreak = content.indexOf('\n');
   const firstLine = content.substring(0, firstLineBreak).trim();
   const language = firstLine || 'text';
   const code = firstLine ? content.substring(firstLineBreak + 1) : content;
 
-  // Get first few lines for preview
   const previewLines = code.split('\n').slice(0, 1).join('\n');
   const hasMoreLines = code.split('\n').length > 1;
 
@@ -74,19 +70,16 @@ const CodeBlock = ({ content }: { content: string }) => {
 export default function ChatMessageContent({
   message,
 }: ChatMessageContentProps) {
-  // Only handle text parts
   const renderContent = () => {
-    return message.parts?.map((part, partIndex) => {
+    return message.parts?.map((part: any, partIndex: number) => {
       if (part.type !== 'text' || !part.text) return null;
 
-      // Split content by code block markers
       const contentParts = part.text.split('```');
 
       return (
         <div key={partIndex} className="w-full space-y-4">
-          {contentParts.map((content, i) =>
+          {contentParts.map((content: string, i: number) =>
             i % 2 === 0 ? (
-              // Regular text content
               <div key={`text-${i}`} className="prose dark:prose-invert w-full">
                 <Markdown
                   remarkPlugins={[remarkGfm]}
@@ -119,7 +112,6 @@ export default function ChatMessageContent({
                 </Markdown>
               </div>
             ) : (
-              // Code block content
               <CodeBlock key={`code-${i}`} content={content} />
             )
           )}

@@ -4,18 +4,15 @@ import {
   ChatBubble,
   ChatBubbleMessage,
 } from '@/components/ui/chat/chat-bubble';
-import { ChatRequestOptions } from 'ai';
-import { Message } from 'ai/react';
+import type { UIMessage } from 'ai';
 import { motion } from 'framer-motion';
 import ChatMessageContent from './chat-message-content';
 import ToolRenderer from './tool-renderer';
 
 interface SimplifiedChatViewProps {
-  message: Message;
+  message: UIMessage;
   isLoading: boolean;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
+  regenerate: () => void;
   addToolResult?: (args: { toolCallId: string; result: string }) => void;
 }
 
@@ -32,37 +29,39 @@ const MOTION_CONFIG = {
 export function SimplifiedChatView({
   message,
   isLoading,
-  reload,
+  regenerate,
   addToolResult,
 }: SimplifiedChatViewProps) {
   if (message.role !== 'assistant') return null;
 
-  // Extract tool invocations that are in "result" state
+  // Extract tool invocations that are in "output-available" state (AI SDK v6)
   const toolInvocations =
     message.parts
       ?.filter(
-        (part) =>
-          part.type === 'tool-invocation' &&
-          part.toolInvocation?.state === 'result'
+        (part: any) =>
+          typeof part.type === 'string' &&
+          part.type.startsWith('tool-') &&
+          part.type !== 'tool-invocation' &&
+          part.state === 'output-available'
       )
-      .map((part) =>
-        part.type === 'tool-invocation' ? part.toolInvocation : null
-      )
-      .filter(Boolean) || [];
+      .map((part: any) => ({
+        toolCallId: part.toolCallId,
+        toolName: part.type.replace(/^tool-/, ''),
+        args: part.input,
+        result: part.output,
+      })) || [];
 
   // Only display the first tool (if any)
   const currentTool = toolInvocations.length > 0 ? [toolInvocations[0]] : [];
 
-  const hasTextContent = message.content.trim().length > 0;
+  const hasTextContent = message.parts?.some(
+    (part: any) => part.type === 'text' && part.text?.trim()
+  );
   const hasTools = currentTool.length > 0;
-
-  console.log('currentTool', currentTool);
 
   return (
     <motion.div {...MOTION_CONFIG} className="flex h-full w-full flex-col px-4">
-      {/* Single scrollable container for both tool and text content */}
       <div className="custom-scrollbar flex h-full w-full flex-col overflow-y-auto">
-        {/* Tool invocation result - displayed at the top */}
         {hasTools && (
           <div className="mb-4 w-full">
             <ToolRenderer
@@ -72,7 +71,6 @@ export function SimplifiedChatView({
           </div>
         )}
 
-        {/* Text content */}
         {hasTextContent && (
           <div className="w-full">
             <ChatBubble variant="received" className="w-full">
@@ -81,8 +79,6 @@ export function SimplifiedChatView({
                   message={message}
                   isLast={true}
                   isLoading={isLoading}
-                  reload={reload}
-                  addToolResult={addToolResult}
                   skipToolRendering={true}
                 />
               </ChatBubbleMessage>
@@ -90,7 +86,6 @@ export function SimplifiedChatView({
           </div>
         )}
 
-        {/* Add some padding at the bottom for better scrolling experience */}
         <div className="pb-4"></div>
       </div>
     </motion.div>

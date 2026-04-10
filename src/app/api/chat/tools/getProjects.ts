@@ -16,7 +16,7 @@ type ProjectItem = {
 
 export const getProjects = tool({
   description: "Return a concise list of featured projects by Md. Nur Islam (derived from PROJECT_CONTENT).",
-  parameters: z.object({}),
+  inputSchema: z.object({}),
   execute: async () => {
     const projects = (PROJECT_CONTENT as ProjectItem[]).map((p) => ({
       title: p.title,

@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const getInternship = tool({
   description:
     "Returns a concise summary of the internship Md. Nur Islam is seeking, plus contact info.",
-  parameters: z.object({}),
+  inputSchema: z.object({}),
   execute: async () => {
     return `Here’s what I’m looking for 👇
 
