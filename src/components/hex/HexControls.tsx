@@ -1,13 +1,14 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Brain, ChevronDown, ChevronUp, Cpu, Sparkles } from 'lucide-react';
+import { Bot, Brain, ChevronDown, ChevronUp, Cpu, Sparkles, Users } from 'lucide-react';
 import { useState } from 'react';
 import { BOARD_SIZES } from '@/lib/hex/constants';
 import type { AIType } from '@/lib/hex/types';
 
 interface HexControlsProps {
   onStart: (boardSize: number, aiType: AIType, humanFirst: boolean) => void;
+  onStartP2P: (boardSize: number) => void;
 }
 
 const aiOptions: { type: AIType; label: string; desc: string; icon: typeof Bot }[] = [
@@ -16,7 +17,7 @@ const aiOptions: { type: AIType; label: string; desc: string; icon: typeof Bot }
   { type: 'minimax', label: 'Genius', desc: 'My smartest AI — MiniMax with alpha-beta pruning', icon: Cpu },
 ];
 
-export default function HexControls({ onStart }: HexControlsProps) {
+export default function HexControls({ onStart, onStartP2P }: HexControlsProps) {
   const [boardSize, setBoardSize] = useState(7);
   const [aiType, setAiType] = useState<AIType>('complex');
   const [humanFirst, setHumanFirst] = useState(true);
@@ -153,6 +154,27 @@ export default function HexControls({ onStart }: HexControlsProps) {
       >
         Start Game
       </motion.button>
+
+      {/* Invite a Friend */}
+      <div className="w-full max-w-xs">
+        <div className="mb-2 flex items-center gap-2">
+          <div className="h-px flex-1 bg-neutral-800" />
+          <span className="text-[10px] tracking-wide text-neutral-500 uppercase">Or</span>
+          <div className="h-px flex-1 bg-neutral-800" />
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => onStartP2P(boardSize)}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-700 bg-neutral-800/50 py-2.5 text-sm font-medium text-neutral-200 transition-colors hover:border-blue-500/60 hover:bg-neutral-800"
+        >
+          <Users size={16} />
+          Invite a Friend
+        </motion.button>
+        <p className="mt-1.5 text-center text-[10px] text-neutral-500">
+          You&apos;ll play as Red. Your friend joins as Blue via a shareable link.
+        </p>
+      </div>
     </motion.div>
   );
 }

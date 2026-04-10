@@ -12,6 +12,15 @@ interface HexStatusBarProps {
   moveCount: number;
   onReset: () => void;
   onNewGame: () => void;
+  p2pInfo?: {
+    myColor: PlayerColor;
+    myName: string;
+    peerName: string;
+    isMyTurn: boolean;
+    surrenderedBy: 'me' | 'peer' | null;
+    canPlayAgain: boolean;
+    playAgainLabel: string;
+  };
 }
 
 export default function HexStatusBar({
@@ -22,6 +31,7 @@ export default function HexStatusBar({
   moveCount,
   onReset,
   onNewGame,
+  p2pInfo,
 }: HexStatusBarProps) {
   const aiPlayer = humanPlayer === RED ? BLUE : RED;
   const isHumanTurn = gamePhase === 'playing' && currentPlayer === humanPlayer;
@@ -29,6 +39,19 @@ export default function HexStatusBar({
   const playerLabel = displayPlayer === RED ? 'Red' : 'Blue';
   const playerColor = displayPlayer === RED ? 'text-red-400' : 'text-blue-400';
   const dotColor = displayPlayer === RED ? 'bg-red-500' : 'bg-blue-500';
+  const isP2P = !!p2pInfo;
+  const iWon = isP2P && winner === p2pInfo.myColor;
+  const winnerMessage = isP2P
+    ? p2pInfo.surrenderedBy === 'peer'
+      ? `${p2pInfo.peerName || 'Opponent'} surrendered`
+      : p2pInfo.surrenderedBy === 'me'
+        ? 'You surrendered'
+        : iWon
+          ? 'You win!'
+          : `${p2pInfo.peerName || 'Opponent'} wins!`
+    : winner === humanPlayer
+      ? 'You win!'
+      : 'AI wins!';
 
   return (
     <div className="flex flex-col items-center gap-3 w-full">
@@ -44,7 +67,7 @@ export default function HexStatusBar({
             <div className="flex items-center gap-2">
               <Trophy className="text-yellow-400" size={20} />
               <span className={`text-lg font-bold ${winner === RED ? 'text-red-400' : 'text-blue-400'}`}>
-                {winner === humanPlayer ? 'You win!' : 'AI wins!'}
+                {winnerMessage}
               </span>
               <Trophy className="text-yellow-400" size={20} />
             </div>
@@ -89,7 +112,13 @@ export default function HexStatusBar({
             <span className="text-sm text-neutral-300">
               <span className={playerColor}>{playerLabel}</span>
               {' — '}
-              {isHumanTurn ? 'Your turn' : "AI's turn"}
+              {isP2P
+                ? p2pInfo.isMyTurn
+                  ? 'Your turn'
+                  : `${p2pInfo.peerName || 'Opponent'}'s turn`
+                : isHumanTurn
+                  ? 'Your turn'
+                  : "AI's turn"}
             </span>
           </motion.div>
         )}
@@ -101,19 +130,22 @@ export default function HexStatusBar({
           <>
             <button
               onClick={onReset}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-neutral-800 text-neutral-300 text-sm hover:bg-neutral-700 transition-colors"
+              disabled={isP2P && !p2pInfo.canPlayAgain}
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-neutral-800 text-neutral-300 text-sm hover:bg-neutral-700 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
             >
               <RotateCcw size={14} />
-              Play Again
+              {isP2P ? p2pInfo.playAgainLabel : 'Play Again'}
             </button>
-            <button
-              onClick={onNewGame}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500 transition-colors"
-            >
-              New Game
-            </button>
+            {!isP2P && (
+              <button
+                onClick={onNewGame}
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500 transition-colors"
+              >
+                New Game
+              </button>
+            )}
           </>
-        ) : gamePhase === 'playing' ? (
+        ) : gamePhase === 'playing' && !isP2P ? (
           <button
             onClick={onNewGame}
             className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-neutral-500 text-xs hover:text-neutral-300 transition-colors"
