@@ -35,3 +35,19 @@ pnpm-debug.log*
 .idea/
 .env.production
 /\!published
+
+# Generated Prisma client (rebuilt on every npm install via postinstall)
+/src/generated/prisma
+
+# Prisma SQLite database file (live content lives here, NOT in git)
+/prisma/portfolio.db
+/prisma/portfolio.db-journal
+/prisma/*.db
+/prisma/*.db-journal
+
+# Runtime bio edited via admin panel — gitignored so git pull doesn't clobber
+# admin edits. data/bio.default.md IS in git as the template fallback.
+/data/bio.md
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
