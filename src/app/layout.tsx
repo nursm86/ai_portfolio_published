@@ -1,10 +1,13 @@
 import { Analytics } from "@vercel/analytics/react"
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+
+const hasClerk = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 // Load Inter font for non-Apple devices
 const inter = Inter({ 
@@ -60,7 +63,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  const tree = (
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -86,4 +89,8 @@ export default function RootLayout({
       </body>
     </html>
   );
+
+  // Only mount ClerkProvider if keys are set. Without keys, ClerkProvider
+  // throws at render time — this lets the site keep working during Clerk setup.
+  return hasClerk ? <ClerkProvider>{tree}</ClerkProvider> : tree;
 }

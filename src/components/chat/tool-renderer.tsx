@@ -1,12 +1,16 @@
 // src/components/chat/tool-renderer.tsx
+import Availability from '../availability';
 import { Contact } from '../contact';
 import Crazy from '../crazy';
+import FAQ from '../faq';
 import InternshipCard from '../InternshipCard';
+import NowRenderer from '../NowRenderer';
 import { Presentation } from '../presentation';
 import AllProjects from '../projects/AllProjects';
 import Resume from '../resume';
 import Skills from '../skills';
 import Sports from '../sport';
+import Stack from '../stack';
 
 interface ToolRendererProps {
   toolInvocations: any[];
@@ -83,6 +87,34 @@ export default function ToolRenderer({
             return (
               <div key={toolCallId} className="w-full rounded-lg">
                 <InternshipCard />
+              </div>
+            );
+
+          case 'getAvailability':
+            return (
+              <div key={toolCallId} className="w-full rounded-lg">
+                <Availability />
+              </div>
+            );
+
+          case 'getFAQ':
+            return (
+              <div key={toolCallId} className="w-full rounded-lg">
+                <FAQ />
+              </div>
+            );
+
+          case 'getStack':
+            return (
+              <div key={toolCallId} className="w-full rounded-lg">
+                <Stack />
+              </div>
+            );
+
+          case 'getNow':
+            return (
+              <div key={toolCallId} className="w-full rounded-lg">
+                <NowRenderer />
               </div>
             );
 

@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Scrolling "What I'm up to" cards on the landing page
+model Activity {
+  id        Int      @id @default(autoincrement())
+  label     String
+  iconName  String
+  color     String
+  href      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Quick-question buttons (Me / Projects / Skills / Contact) — single source for landing, chat-landing, HelperBoost
+model QuestionCard {
+  id       Int    @id @default(autoincrement())
+  key      String @unique
+  prompt   String
+  iconName String
+  color    String
+  order    Int    @default(0)
+}
+
+/// Rotating hero titles under the "Hey, I'm Nur 👋" header
+model HeroTitle {
+  id    Int    @id @default(autoincrement())
+  text  String
+  order Int    @default(0)
+}
+
+/// /now page — singleton row (id always 1)
+model NowPage {
+  id        Int      @id @default(1)
+  bodyMd    String
+  updatedAt DateTime @updatedAt
+}
+
+/// FAQ entries surfaced by the getFAQ chat tool
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
+  order    Int    @default(0)
+}
+
+/// Availability — singleton row (id always 1)
+model AvailabilityEntry {
+  id        Int      @id @default(1)
+  status    String
+  headline  String
+  detailsMd String
+  timezone  String   @default("AEST (UTC+10)")
+  updatedAt DateTime @updatedAt
+}
+
+/// Day-to-day stack items surfaced by the getStack chat tool
+model StackItem {
+  id       Int     @id @default(autoincrement())
+  category String
+  name     String
+  note     String?
+  order    Int     @default(0)
+}

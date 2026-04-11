@@ -14,22 +14,40 @@ echo "========================================="
 echo ""
 
 # Pull latest code
-echo "[1/4] Pulling latest code..."
+echo "[1/6] Pulling latest code..."
 git pull origin main
 echo ""
 
-# Install dependencies (only if package.json changed)
-echo "[2/4] Installing dependencies..."
+# Install dependencies
+echo "[2/6] Installing dependencies..."
 npm install --legacy-peer-deps --production=false
 echo ""
 
+# Generate Prisma client (reads prisma/schema.prisma)
+echo "[3/6] Generating Prisma client..."
+npx prisma generate
+echo ""
+
+# Apply any pending database migrations. Safe on first run (creates DB).
+echo "[4/6] Applying database migrations..."
+npx prisma migrate deploy
+echo ""
+
+# Seed only on first run when the database is empty (non-destructive).
+# Remove this block once the DB has production data you don't want overwritten.
+if [ ! -s prisma/portfolio.db ] || [ "$(sqlite3 prisma/portfolio.db 'SELECT COUNT(*) FROM Activity;' 2>/dev/null || echo 0)" = "0" ]; then
+    echo "[4b] Database empty — seeding initial content..."
+    npm run db:seed || echo "Seed failed (continuing anyway)"
+    echo ""
+fi
+
 # Build
-echo "[3/4] Building..."
+echo "[5/6] Building..."
 npm run build
 echo ""
 
 # Restart
-echo "[4/4] Restarting service..."
+echo "[6/6] Restarting service..."
 sudo systemctl restart portfolio
 sleep 2
 
