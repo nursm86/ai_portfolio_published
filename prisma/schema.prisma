@@ -11,16 +11,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// Scrolling "What I'm up to" cards on the landing page
+/// Scrolling "What I'm up to" cards on the landing page.
+/// Clicking a chip routes into the chat with `chatPrompt` (or `label` if null)
+/// pre-filled as the user query. `href` is only for external/non-chat routes
+/// like /hex — prefer chatPrompt for everything else so the whole site stays
+/// chat-first.
 model Activity {
-  id        Int      @id @default(autoincrement())
-  label     String
-  iconName  String
-  color     String
-  href      String?
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  label      String
+  iconName   String
+  color      String
+  href       String?
+  chatPrompt String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 /// Quick-question buttons (Me / Projects / Skills / Contact) — single source for landing, chat-landing, HelperBoost
@@ -38,13 +43,6 @@ model HeroTitle {
   id    Int    @id @default(autoincrement())
   text  String
   order Int    @default(0)
-}
-
-/// /now page — singleton row (id always 1)
-model NowPage {
-  id        Int      @id @default(1)
-  bodyMd    String
-  updatedAt DateTime @updatedAt
 }
 
 /// FAQ entries surfaced by the getFAQ chat tool

@@ -4,7 +4,6 @@ import { Contact } from '../contact';
 import Crazy from '../crazy';
 import FAQ from '../faq';
 import InternshipCard from '../InternshipCard';
-import NowRenderer from '../NowRenderer';
 import { Presentation } from '../presentation';
 import AllProjects from '../projects/AllProjects';
 import Resume from '../resume';
@@ -108,13 +107,6 @@ export default function ToolRenderer({
             return (
               <div key={toolCallId} className="w-full rounded-lg">
                 <Stack />
-              </div>
-            );
-
-          case 'getNow':
-            return (
-              <div key={toolCallId} className="w-full rounded-lg">
-                <NowRenderer />
               </div>
             );
 

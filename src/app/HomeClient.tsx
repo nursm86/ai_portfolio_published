@@ -7,7 +7,7 @@ import { GithubButton } from '@/components/ui/github-button';
 import WelcomeModal from '@/components/welcome-modal';
 import { getIcon } from '@/lib/iconRegistry';
 import { motion } from 'framer-motion';
-import { ArrowRight, Cloud, Hexagon, Moon, Rocket, Sun } from 'lucide-react';
+import { ArrowRight, Cloud, Hexagon, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,7 @@ export type ActivityCard = {
   iconName: string;
   color: string;
   href: string | null;
+  chatPrompt: string | null;
 };
 
 export type QuestionCardDto = {
@@ -156,23 +157,23 @@ export default function HomeClient({
         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
           {activities.map((activity, i) => {
             const Icon = getIcon(activity.iconName);
-            const clickable = !!activity.href;
+            // Every chip is clickable. href (e.g. /hex) wins, otherwise we
+            // route into chat with chatPrompt (falling back to label).
+            const onClick = () => {
+              if (activity.href) {
+                router.push(activity.href);
+                return;
+              }
+              goToChat(activity.chatPrompt ?? activity.label);
+            };
             return (
               <motion.div
                 key={activity.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + i * 0.08 }}
-                className={`flex min-w-[160px] max-w-[200px] shrink-0 items-center gap-2.5 rounded-xl border border-neutral-200 bg-white/30 px-3 py-2.5 backdrop-blur-lg dark:border-neutral-700 dark:bg-neutral-800/50 ${
-                  clickable
-                    ? 'cursor-pointer hover:bg-white/50 dark:hover:bg-neutral-700/50 transition-colors'
-                    : ''
-                }`}
-                onClick={
-                  clickable && activity.href
-                    ? () => router.push(activity.href as string)
-                    : undefined
-                }
+                className="flex min-w-[160px] max-w-[200px] shrink-0 cursor-pointer items-center gap-2.5 rounded-xl border border-neutral-200 bg-white/30 px-3 py-2.5 backdrop-blur-lg transition-colors hover:bg-white/50 dark:border-neutral-700 dark:bg-neutral-800/50 dark:hover:bg-neutral-700/50"
+                onClick={onClick}
               >
                 <Icon
                   size={16}
@@ -264,14 +265,6 @@ export default function HomeClient({
           >
             <Cloud size={14} className="text-amber-400" />
             How this site works
-            <ArrowRight size={14} />
-          </button>
-          <button
-            onClick={() => router.push('/now')}
-            className="flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/50 px-5 py-2 text-sm text-neutral-400 backdrop-blur-lg transition-all hover:border-neutral-500 hover:text-neutral-200"
-          >
-            <Rocket size={14} className="text-green-400" />
-            What I&apos;m doing now
             <ArrowRight size={14} />
           </button>
         </motion.div>

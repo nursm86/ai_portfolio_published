@@ -59,13 +59,13 @@ const Avatar = dynamic<AvatarProps>(
             {isTalking ? (
               <video
                 ref={videoRef}
-                className="h-full w-full scale-[2.5] object-cover rounded-full"
-                style={{ clipPath: 'circle(40%)' }}
+                className="h-full w-full scale-[1.8] object-contain"
                 muted
                 playsInline
                 loop
+                autoPlay
               >
-                <source src="/memoji_talking.mp4" type="video/mp4" />
+                <source src="/memoji_talking.webm" type="video/webm" />
               </video>
             ) : (
               <img
@@ -95,7 +95,9 @@ const Chat = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('query');
-  const [autoSubmitted, setAutoSubmitted] = useState(false);
+  // Ref (not state) so React 19 Strict Mode's double-invoked effect sees the
+  // flag synchronously on the second run and doesn't fire the query twice.
+  const autoSubmittedRef = useRef(false);
   const [isTalking, setIsTalking] = useState(false);
   const [input, setInput] = useState('');
 
@@ -214,11 +216,11 @@ const Chat = () => {
       videoRef.current.pause();
     }
 
-    if (initialQuery && !autoSubmitted) {
-      setAutoSubmitted(true);
+    if (initialQuery && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true;
       submitQuery(initialQuery);
     }
-  }, [initialQuery, autoSubmitted, submitQuery]);
+  }, [initialQuery, submitQuery]);
 
   const onSubmit = useCallback(() => {
     if (!input.trim() || isToolInProgress) return;

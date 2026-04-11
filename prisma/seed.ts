@@ -12,6 +12,9 @@ const prisma = new PrismaClient();
 
 async function main() {
   // --- Activities (landing "What I'm up to" cards) ---
+  // chatPrompt is the query sent into /chat?query= when the chip is clicked.
+  // href is only for external-app routes (e.g. /hex); everything else is
+  // chat-first to stay on the single conversational surface.
   await prisma.activity.deleteMany();
   await prisma.activity.createMany({
     data: [
@@ -19,24 +22,28 @@ async function main() {
         label: 'Preparing for AWS Solutions Architect Associate exam',
         iconName: 'Cloud',
         color: '#F59E0B',
+        chatPrompt: 'What are you learning about AWS right now?',
         order: 0,
       },
       {
         label: 'Building globalpsychicsassociation.com platform',
         iconName: 'Globe',
         color: '#3B82F6',
+        chatPrompt: 'Tell me about the GPA platform you are building.',
         order: 1,
       },
       {
         label: 'Working with open source AI models',
         iconName: 'Sparkles',
         color: '#A855F7',
+        chatPrompt: 'Which open source AI models are you working with?',
         order: 2,
       },
       {
         label: 'V2V Negotiation research for autonomous vehicles at WSU',
         iconName: 'Car',
         color: '#10B981',
+        chatPrompt: 'Tell me about your V2V negotiation research.',
         order: 3,
       },
       {
@@ -96,17 +103,6 @@ async function main() {
       { text: 'AI Enthusiast', order: 1 },
       { text: 'Problem Solver', order: 2 },
     ],
-  });
-
-  // --- /now page (singleton placeholder) ---
-  await prisma.nowPage.upsert({
-    where: { id: 1 },
-    create: {
-      id: 1,
-      bodyMd:
-        '# Now\n\n_This page is under construction._\n\nNur will fill in what he is focused on this month via the admin panel.',
-    },
-    update: {},
   });
 
   // --- Availability (singleton placeholder) ---

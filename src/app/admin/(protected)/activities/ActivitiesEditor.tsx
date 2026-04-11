@@ -10,6 +10,7 @@ type Activity = {
   iconName: string;
   color: string;
   href: string | null;
+  chatPrompt: string | null;
   order: number;
 };
 
@@ -18,6 +19,7 @@ const EMPTY: Omit<Activity, 'id' | 'order'> = {
   iconName: 'Sparkles',
   color: '#A855F7',
   href: null,
+  chatPrompt: null,
 };
 
 export default function ActivitiesEditor({ initial }: { initial: Activity[] }) {
@@ -139,6 +141,17 @@ export default function ActivitiesEditor({ initial }: { initial: Activity[] }) {
                     }
                     className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm dark:border-neutral-700"
                   />
+                  <input
+                    type="text"
+                    defaultValue={item.chatPrompt ?? ''}
+                    onBlur={(e) => {
+                      const v = e.target.value.trim() || null;
+                      if (v !== item.chatPrompt)
+                        updateItem(item.id, { chatPrompt: v });
+                    }}
+                    placeholder="Chat prompt when clicked (falls back to label)"
+                    className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-xs italic dark:border-neutral-700"
+                  />
                   <div className="flex flex-wrap gap-2 text-xs">
                     <label className="flex items-center gap-1">
                       Icon:
@@ -169,10 +182,10 @@ export default function ActivitiesEditor({ initial }: { initial: Activity[] }) {
                       />
                     </label>
                     <label className="flex items-center gap-1">
-                      Link:
+                      Href (external route, e.g. /hex):
                       <input
                         type="text"
-                        placeholder="/hex (optional)"
+                        placeholder="optional"
                         defaultValue={item.href ?? ''}
                         onBlur={(e) => {
                           const v = e.target.value.trim() || null;
@@ -221,10 +234,22 @@ export default function ActivitiesEditor({ initial }: { initial: Activity[] }) {
         <div className="space-y-2">
           <input
             type="text"
-            placeholder="Label"
+            placeholder="Label (what shows on the chip)"
             value={newItem.label}
             onChange={(e) => setNewItem({ ...newItem, label: e.target.value })}
             className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm dark:border-neutral-700"
+          />
+          <input
+            type="text"
+            placeholder="Chat prompt when clicked (defaults to label)"
+            value={newItem.chatPrompt ?? ''}
+            onChange={(e) =>
+              setNewItem({
+                ...newItem,
+                chatPrompt: e.target.value.trim() || null,
+              })
+            }
+            className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-xs italic dark:border-neutral-700"
           />
           <div className="flex flex-wrap gap-2 text-xs">
             <select
@@ -250,7 +275,7 @@ export default function ActivitiesEditor({ initial }: { initial: Activity[] }) {
             />
             <input
               type="text"
-              placeholder="Link (optional)"
+              placeholder="href (optional, e.g. /hex)"
               value={newItem.href ?? ''}
               onChange={(e) =>
                 setNewItem({ ...newItem, href: e.target.value.trim() || null })

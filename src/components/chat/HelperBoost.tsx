@@ -338,7 +338,11 @@ function QuestionItem({ question, onClick, isSpecial }: QuestionItemProps) {
     >
       <div className="flex items-center">
         {isSpecial && <Sparkles className="mr-2 h-4 w-4 text-white" />}
-        <span className={isSpecial ? 'font-medium text-white' : ''}>
+        <span
+          className={
+            isSpecial ? 'font-medium text-white' : 'text-gray-900'
+          }
+        >
           {question}
         </span>
       </div>

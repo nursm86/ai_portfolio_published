@@ -52,7 +52,6 @@ export const ModelName = {
   Activity: 'Activity',
   QuestionCard: 'QuestionCard',
   HeroTitle: 'HeroTitle',
-  NowPage: 'NowPage',
   FAQ: 'FAQ',
   AvailabilityEntry: 'AvailabilityEntry',
   StackItem: 'StackItem'
@@ -77,6 +76,7 @@ export const ActivityScalarFieldEnum = {
   iconName: 'iconName',
   color: 'color',
   href: 'href',
+  chatPrompt: 'chatPrompt',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -104,15 +104,6 @@ export const HeroTitleScalarFieldEnum = {
 } as const
 
 export type HeroTitleScalarFieldEnum = (typeof HeroTitleScalarFieldEnum)[keyof typeof HeroTitleScalarFieldEnum]
-
-
-export const NowPageScalarFieldEnum = {
-  id: 'id',
-  bodyMd: 'bodyMd',
-  updatedAt: 'updatedAt'
-} as const
-
-export type NowPageScalarFieldEnum = (typeof NowPageScalarFieldEnum)[keyof typeof NowPageScalarFieldEnum]
 
 
 export const FAQScalarFieldEnum = {

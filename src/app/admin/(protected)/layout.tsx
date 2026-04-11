@@ -14,10 +14,10 @@ const hasClerk = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 const nav = [
   { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/bio', label: 'Bio (chat prompt)' },
   { href: '/admin/activities', label: 'Activities' },
   { href: '/admin/questions', label: 'Question cards' },
   { href: '/admin/hero', label: 'Hero titles' },
-  { href: '/admin/now', label: '/now page' },
   { href: '/admin/availability', label: 'Availability' },
   { href: '/admin/faq', label: 'FAQ' },
   { href: '/admin/stack', label: 'Stack' },

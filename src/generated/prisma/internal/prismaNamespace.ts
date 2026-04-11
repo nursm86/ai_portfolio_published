@@ -393,7 +393,6 @@ export const ModelName = {
   Activity: 'Activity',
   QuestionCard: 'QuestionCard',
   HeroTitle: 'HeroTitle',
-  NowPage: 'NowPage',
   FAQ: 'FAQ',
   AvailabilityEntry: 'AvailabilityEntry',
   StackItem: 'StackItem'
@@ -412,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "activity" | "questionCard" | "heroTitle" | "nowPage" | "fAQ" | "availabilityEntry" | "stackItem"
+    modelProps: "activity" | "questionCard" | "heroTitle" | "fAQ" | "availabilityEntry" | "stackItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -635,80 +634,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.HeroTitleCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.HeroTitleCountAggregateOutputType> | number
-        }
-      }
-    }
-    NowPage: {
-      payload: Prisma.$NowPagePayload<ExtArgs>
-      fields: Prisma.NowPageFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.NowPageFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.NowPageFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>
-        }
-        findFirst: {
-          args: Prisma.NowPageFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.NowPageFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>
-        }
-        findMany: {
-          args: Prisma.NowPageFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>[]
-        }
-        create: {
-          args: Prisma.NowPageCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>
-        }
-        createMany: {
-          args: Prisma.NowPageCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.NowPageCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>[]
-        }
-        delete: {
-          args: Prisma.NowPageDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>
-        }
-        update: {
-          args: Prisma.NowPageUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>
-        }
-        deleteMany: {
-          args: Prisma.NowPageDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.NowPageUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.NowPageUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>[]
-        }
-        upsert: {
-          args: Prisma.NowPageUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$NowPagePayload>
-        }
-        aggregate: {
-          args: Prisma.NowPageAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateNowPage>
-        }
-        groupBy: {
-          args: Prisma.NowPageGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.NowPageGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.NowPageCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.NowPageCountAggregateOutputType> | number
         }
       }
     }
@@ -976,6 +901,7 @@ export const ActivityScalarFieldEnum = {
   iconName: 'iconName',
   color: 'color',
   href: 'href',
+  chatPrompt: 'chatPrompt',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1003,15 +929,6 @@ export const HeroTitleScalarFieldEnum = {
 } as const
 
 export type HeroTitleScalarFieldEnum = (typeof HeroTitleScalarFieldEnum)[keyof typeof HeroTitleScalarFieldEnum]
-
-
-export const NowPageScalarFieldEnum = {
-  id: 'id',
-  bodyMd: 'bodyMd',
-  updatedAt: 'updatedAt'
-} as const
-
-export type NowPageScalarFieldEnum = (typeof NowPageScalarFieldEnum)[keyof typeof NowPageScalarFieldEnum]
 
 
 export const FAQScalarFieldEnum = {
@@ -1186,7 +1103,6 @@ export type GlobalOmitConfig = {
   activity?: Prisma.ActivityOmit
   questionCard?: Prisma.QuestionCardOmit
   heroTitle?: Prisma.HeroTitleOmit
-  nowPage?: Prisma.NowPageOmit
   fAQ?: Prisma.FAQOmit
   availabilityEntry?: Prisma.AvailabilityEntryOmit
   stackItem?: Prisma.StackItemOmit

@@ -14,7 +14,11 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Activity
- * Scrolling "What I'm up to" cards on the landing page
+ * Scrolling "What I'm up to" cards on the landing page.
+ * Clicking a chip routes into the chat with `chatPrompt` (or `label` if null)
+ * pre-filled as the user query. `href` is only for external/non-chat routes
+ * like /hex — prefer chatPrompt for everything else so the whole site stays
+ * chat-first.
  */
 export type ActivityModel = runtime.Types.Result.DefaultSelection<Prisma.$ActivityPayload>
 
@@ -42,6 +46,7 @@ export type ActivityMinAggregateOutputType = {
   iconName: string | null
   color: string | null
   href: string | null
+  chatPrompt: string | null
   order: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -53,6 +58,7 @@ export type ActivityMaxAggregateOutputType = {
   iconName: string | null
   color: string | null
   href: string | null
+  chatPrompt: string | null
   order: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,6 +70,7 @@ export type ActivityCountAggregateOutputType = {
   iconName: number
   color: number
   href: number
+  chatPrompt: number
   order: number
   createdAt: number
   updatedAt: number
@@ -87,6 +94,7 @@ export type ActivityMinAggregateInputType = {
   iconName?: true
   color?: true
   href?: true
+  chatPrompt?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -98,6 +106,7 @@ export type ActivityMaxAggregateInputType = {
   iconName?: true
   color?: true
   href?: true
+  chatPrompt?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -109,6 +118,7 @@ export type ActivityCountAggregateInputType = {
   iconName?: true
   color?: true
   href?: true
+  chatPrompt?: true
   order?: true
   createdAt?: true
   updatedAt?: true
@@ -207,6 +217,7 @@ export type ActivityGroupByOutputType = {
   iconName: string
   color: string
   href: string | null
+  chatPrompt: string | null
   order: number
   createdAt: Date
   updatedAt: Date
@@ -241,6 +252,7 @@ export type ActivityWhereInput = {
   iconName?: Prisma.StringFilter<"Activity"> | string
   color?: Prisma.StringFilter<"Activity"> | string
   href?: Prisma.StringNullableFilter<"Activity"> | string | null
+  chatPrompt?: Prisma.StringNullableFilter<"Activity"> | string | null
   order?: Prisma.IntFilter<"Activity"> | number
   createdAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
@@ -252,6 +264,7 @@ export type ActivityOrderByWithRelationInput = {
   iconName?: Prisma.SortOrder
   color?: Prisma.SortOrder
   href?: Prisma.SortOrderInput | Prisma.SortOrder
+  chatPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -266,6 +279,7 @@ export type ActivityWhereUniqueInput = Prisma.AtLeast<{
   iconName?: Prisma.StringFilter<"Activity"> | string
   color?: Prisma.StringFilter<"Activity"> | string
   href?: Prisma.StringNullableFilter<"Activity"> | string | null
+  chatPrompt?: Prisma.StringNullableFilter<"Activity"> | string | null
   order?: Prisma.IntFilter<"Activity"> | number
   createdAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
@@ -277,6 +291,7 @@ export type ActivityOrderByWithAggregationInput = {
   iconName?: Prisma.SortOrder
   color?: Prisma.SortOrder
   href?: Prisma.SortOrderInput | Prisma.SortOrder
+  chatPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -296,6 +311,7 @@ export type ActivityScalarWhereWithAggregatesInput = {
   iconName?: Prisma.StringWithAggregatesFilter<"Activity"> | string
   color?: Prisma.StringWithAggregatesFilter<"Activity"> | string
   href?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
+  chatPrompt?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   order?: Prisma.IntWithAggregatesFilter<"Activity"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Activity"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Activity"> | Date | string
@@ -306,6 +322,7 @@ export type ActivityCreateInput = {
   iconName: string
   color: string
   href?: string | null
+  chatPrompt?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -317,6 +334,7 @@ export type ActivityUncheckedCreateInput = {
   iconName: string
   color: string
   href?: string | null
+  chatPrompt?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -327,6 +345,7 @@ export type ActivityUpdateInput = {
   iconName?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   href?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -338,6 +357,7 @@ export type ActivityUncheckedUpdateInput = {
   iconName?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   href?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -349,6 +369,7 @@ export type ActivityCreateManyInput = {
   iconName: string
   color: string
   href?: string | null
+  chatPrompt?: string | null
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -359,6 +380,7 @@ export type ActivityUpdateManyMutationInput = {
   iconName?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   href?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -370,6 +392,7 @@ export type ActivityUncheckedUpdateManyInput = {
   iconName?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   href?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chatPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -381,6 +404,7 @@ export type ActivityCountOrderByAggregateInput = {
   iconName?: Prisma.SortOrder
   color?: Prisma.SortOrder
   href?: Prisma.SortOrder
+  chatPrompt?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -397,6 +421,7 @@ export type ActivityMaxOrderByAggregateInput = {
   iconName?: Prisma.SortOrder
   color?: Prisma.SortOrder
   href?: Prisma.SortOrder
+  chatPrompt?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -408,6 +433,7 @@ export type ActivityMinOrderByAggregateInput = {
   iconName?: Prisma.SortOrder
   color?: Prisma.SortOrder
   href?: Prisma.SortOrder
+  chatPrompt?: Prisma.SortOrder
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -446,6 +472,7 @@ export type ActivitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   iconName?: boolean
   color?: boolean
   href?: boolean
+  chatPrompt?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -457,6 +484,7 @@ export type ActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   iconName?: boolean
   color?: boolean
   href?: boolean
+  chatPrompt?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -468,6 +496,7 @@ export type ActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   iconName?: boolean
   color?: boolean
   href?: boolean
+  chatPrompt?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -479,12 +508,13 @@ export type ActivitySelectScalar = {
   iconName?: boolean
   color?: boolean
   href?: boolean
+  chatPrompt?: boolean
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "iconName" | "color" | "href" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["activity"]>
+export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "iconName" | "color" | "href" | "chatPrompt" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["activity"]>
 
 export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Activity"
@@ -495,6 +525,7 @@ export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     iconName: string
     color: string
     href: string | null
+    chatPrompt: string | null
     order: number
     createdAt: Date
     updatedAt: Date
@@ -926,6 +957,7 @@ export interface ActivityFieldRefs {
   readonly iconName: Prisma.FieldRef<"Activity", 'String'>
   readonly color: Prisma.FieldRef<"Activity", 'String'>
   readonly href: Prisma.FieldRef<"Activity", 'String'>
+  readonly chatPrompt: Prisma.FieldRef<"Activity", 'String'>
   readonly order: Prisma.FieldRef<"Activity", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Activity", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Activity", 'DateTime'>

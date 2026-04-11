@@ -3,36 +3,35 @@ import {
   getAvailability,
   getFAQs,
   getHeroTitles,
-  getNowPage,
   getQuestionCards,
   getStackItems,
 } from '@/lib/content';
+import { isBioCustomised } from '@/lib/bio';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
-  const [activities, questions, heroTitles, faqs, stack, now, availability] =
+  const [activities, questions, heroTitles, faqs, stack, availability, bioCustomised] =
     await Promise.all([
       getActivities(),
       getQuestionCards(),
       getHeroTitles(),
       getFAQs(),
       getStackItems(),
-      getNowPage(),
       getAvailability(),
+      isBioCustomised(),
     ]);
 
   const cards = [
+    {
+      href: '/admin/bio',
+      label: 'Bio (chat prompt)',
+      count: bioCustomised ? 'custom' : 'default',
+    },
     { href: '/admin/activities', label: 'Activities', count: activities.length },
     { href: '/admin/questions', label: 'Question cards', count: questions.length },
     { href: '/admin/hero', label: 'Hero titles', count: heroTitles.length },
     { href: '/admin/faq', label: 'FAQ', count: faqs.length },
     { href: '/admin/stack', label: 'Stack items', count: stack.length },
-    {
-      href: '/admin/now',
-      label: '/now page',
-      count: now.bodyMd.length,
-      suffix: 'chars',
-    },
     {
       href: '/admin/availability',
       label: 'Availability',
@@ -53,14 +52,7 @@ export default async function AdminDashboard() {
             <div className="text-xs text-neutral-500 uppercase tracking-wide">
               {c.label}
             </div>
-            <div className="mt-1 text-2xl font-semibold">
-              {c.count}
-              {c.suffix ? (
-                <span className="ml-1 text-xs font-normal text-neutral-500">
-                  {c.suffix}
-                </span>
-              ) : null}
-            </div>
+            <div className="mt-1 text-2xl font-semibold">{c.count}</div>
           </Link>
         ))}
       </div>

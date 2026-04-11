@@ -46,7 +46,11 @@ path.join(process.cwd(), "src/generated/prisma/libquery_engine-darwin-arm64.dyli
 
 /**
  * Model Activity
- * Scrolling "What I'm up to" cards on the landing page
+ * Scrolling "What I'm up to" cards on the landing page.
+ * Clicking a chip routes into the chat with `chatPrompt` (or `label` if null)
+ * pre-filled as the user query. `href` is only for external/non-chat routes
+ * like /hex — prefer chatPrompt for everything else so the whole site stays
+ * chat-first.
  */
 export type Activity = Prisma.ActivityModel
 /**
@@ -59,11 +63,6 @@ export type QuestionCard = Prisma.QuestionCardModel
  * Rotating hero titles under the "Hey, I'm Nur 👋" header
  */
 export type HeroTitle = Prisma.HeroTitleModel
-/**
- * Model NowPage
- * /now page — singleton row (id always 1)
- */
-export type NowPage = Prisma.NowPageModel
 /**
  * Model FAQ
  * FAQ entries surfaced by the getFAQ chat tool

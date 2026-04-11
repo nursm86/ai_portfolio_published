@@ -16,11 +16,6 @@ export async function getHeroTitles() {
   return prisma.heroTitle.findMany({ orderBy: { order: 'asc' } });
 }
 
-export async function getNowPage() {
-  const row = await prisma.nowPage.findUnique({ where: { id: 1 } });
-  return row ?? { id: 1, bodyMd: '_To be written._', updatedAt: new Date() };
-}
-
 export async function getFAQs() {
   return prisma.fAQ.findMany({ orderBy: { order: 'asc' } });
 }

@@ -8,6 +8,7 @@ const ActivityCreate = z.object({
   iconName: z.string().min(1).max(64),
   color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
   href: z.string().max(200).nullable().optional(),
+  chatPrompt: z.string().max(500).nullable().optional(),
   order: z.number().int().min(0).max(9999).optional(),
 });
 

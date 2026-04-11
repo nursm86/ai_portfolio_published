@@ -19,6 +19,7 @@ export default async function Home() {
         iconName: a.iconName,
         color: a.color,
         href: a.href,
+        chatPrompt: a.chatPrompt,
       }))}
       questions={questions.map((q) => ({
         id: q.id,

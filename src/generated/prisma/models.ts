@@ -11,7 +11,6 @@
 export type * from './models/Activity'
 export type * from './models/QuestionCard'
 export type * from './models/HeroTitle'
-export type * from './models/NowPage'
 export type * from './models/FAQ'
 export type * from './models/AvailabilityEntry'
 export type * from './models/StackItem'
