@@ -23,8 +23,12 @@ echo "[2/6] Installing dependencies..."
 npm install --legacy-peer-deps --production=false
 echo ""
 
-# Generate Prisma client (reads prisma/schema.prisma)
+# Generate Prisma client (reads prisma/schema.prisma).
+# Nuke the output dir first so stale engine binaries or leftover files from
+# previous generator versions don't block regeneration. Safe — everything in
+# src/generated/prisma is regenerated from scratch.
 echo "[3/6] Generating Prisma client..."
+rm -rf src/generated/prisma
 npx prisma generate
 echo ""
 
