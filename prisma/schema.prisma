@@ -71,3 +71,61 @@ model StackItem {
   note     String?
   order    Int     @default(0)
 }
+
+/// Portfolio project / case study. One Project -> many screenshots and links.
+/// Rendered both in chat (via getProjects tool -> Apple card grid) and on
+/// a dedicated /projects/[slug] scroll-driven detail page.
+model Project {
+  id             Int            @id @default(autoincrement())
+  slug           String         @unique
+  title          String
+  category       String
+  tagline        String
+  coverImage     String?
+  date           String
+  order          Int            @default(0)
+  featured       Boolean        @default(true)
+
+  // Markdown story sections. Empty string -> section hidden on the page.
+  problemMd      String         @default("")
+  solutionMd     String         @default("")
+  architectureMd String         @default("")
+  impactMd       String         @default("")
+
+  // JSON-encoded array of tech stack chips (SQLite has no array type).
+  techStack      String         @default("[]")
+
+  // Optional chat query fired from the "Ask me anything about this" CTA.
+  chatPrompt     String?
+
+  images         ProjectImage[]
+  links          ProjectLink[]
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+/// Screenshot or diagram attached to a project.
+model ProjectImage {
+  id        Int     @id @default(autoincrement())
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  src       String
+  alt       String
+  caption   String?
+  width     Int?
+  height    Int?
+  layout    String  @default("wide") // "wide" | "half" | "mobile"
+  order     Int     @default(0)
+}
+
+/// External link attached to a project (live demo, GitHub, case study PDF, etc.).
+model ProjectLink {
+  id        Int     @id @default(autoincrement())
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label     String
+  url       String
+  iconName  String?
+  order     Int     @default(0)
+}

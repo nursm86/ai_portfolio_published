@@ -3,6 +3,7 @@ import {
   getAvailability,
   getFAQs,
   getHeroTitles,
+  getProjects,
   getQuestionCards,
   getStackItems,
 } from '@/lib/content';
@@ -10,18 +11,28 @@ import { isBioCustomised } from '@/lib/bio';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
-  const [activities, questions, heroTitles, faqs, stack, availability, bioCustomised] =
-    await Promise.all([
-      getActivities(),
-      getQuestionCards(),
-      getHeroTitles(),
-      getFAQs(),
-      getStackItems(),
-      getAvailability(),
-      isBioCustomised(),
-    ]);
+  const [
+    activities,
+    questions,
+    heroTitles,
+    faqs,
+    stack,
+    availability,
+    projects,
+    bioCustomised,
+  ] = await Promise.all([
+    getActivities(),
+    getQuestionCards(),
+    getHeroTitles(),
+    getFAQs(),
+    getStackItems(),
+    getAvailability(),
+    getProjects(),
+    isBioCustomised(),
+  ]);
 
   const cards = [
+    { href: '/admin/projects', label: 'Projects', count: projects.length },
     {
       href: '/admin/bio',
       label: 'Bio (chat prompt)',

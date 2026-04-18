@@ -1,32 +1,28 @@
-import { tool } from "ai";
-import { z } from "zod";
-// adjust the import path if needed
-import { PROJECT_CONTENT } from '@/components/projects/Data';
-
-type Link = { name: string; url: string };
-type ImageItem = { src: string; alt?: string };
-type ProjectItem = {
-  title: string;
-  description: string;
-  techStack?: string[];
-  date?: string | number;
-  links?: Link[];
-  images?: ImageItem[];
-};
+import { tool } from 'ai';
+import { z } from 'zod';
+import { getProjects as fetchProjects } from '@/lib/content';
 
 export const getProjects = tool({
-  description: "Return a concise list of featured projects by Md. Nur Islam (derived from PROJECT_CONTENT).",
+  description:
+    "Return a concise list of Nur's featured projects (derived from the Project table). The carousel component fetches full data itself; this tool result is used by the model to acknowledge which projects exist.",
   inputSchema: z.object({}),
   execute: async () => {
-    const projects = (PROJECT_CONTENT as ProjectItem[]).map((p) => ({
-      title: p.title,
-      date: p.date ?? "",
-      description: p.description,
-      links: (p.links ?? []).slice(0, 3), // keep it short
-      techStack: (p.techStack ?? []).slice(0, 6), // brief
-      coverImage: p.images?.[0]?.src ?? null,
-    }));
-
-    return { projects };
+    const projects = await fetchProjects();
+    return {
+      projects: projects.map((p) => ({
+        slug: p.slug,
+        title: p.title,
+        category: p.category,
+        tagline: p.tagline,
+        date: p.date,
+        techStack: (() => {
+          try {
+            return JSON.parse(p.techStack) as string[];
+          } catch {
+            return [];
+          }
+        })(),
+      })),
+    };
   },
 });

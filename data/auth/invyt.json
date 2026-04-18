@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "https://invyt.com.au",
+      "localStorage": [
+        {
+          "name": "inv_token",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWQzNmQyZmYzYmYwNTk0MTNmMDk2NCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTk1NzUxMiwiZXhwIjoxNzc4NTQ5NTEyfQ.p1qrkgBZA2Iki-CU-uTi0bWFBUeQHP-juAi2y7u5xyg"
+        }
+      ]
+    }
+  ]
+}

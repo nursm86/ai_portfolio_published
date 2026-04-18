@@ -144,6 +144,83 @@ async function main() {
     ],
   });
 
+  // --- Projects ---
+  // Upsert keeps this idempotent: re-seeding doesn't clobber admin edits.
+  const gpa = await prisma.project.upsert({
+    where: { slug: 'gpa-platform' },
+    create: {
+      slug: 'gpa-platform',
+      title: 'GPA Platform',
+      category: 'Full-stack platform',
+      tagline:
+        'A marketplace for psychic practitioners with real-time service delivery.',
+      date: '2025',
+      order: 0,
+      featured: true,
+      techStack: JSON.stringify([
+        'Node.js',
+        'Express',
+        'TypeScript',
+        'Prisma',
+        'MySQL',
+        'React 18',
+        'Vite',
+        'Zustand',
+        'Tailwind',
+        'Stripe',
+        'Twilio',
+        'WebRTC',
+      ]),
+      problemMd: '_To be written via admin._',
+      solutionMd: '_To be written via admin._',
+      architectureMd:
+        '208 database models, 100+ API endpoints, 48+ route modules, 6 user roles.',
+      impactMd: '',
+      chatPrompt: 'Tell me about the GPA platform you are building.',
+    },
+    update: {},
+  });
+
+  const v2v = await prisma.project.upsert({
+    where: { slug: 'v2v-negotiation' },
+    create: {
+      slug: 'v2v-negotiation',
+      title: 'V2V Negotiation',
+      category: 'Research',
+      tagline:
+        'Automated negotiation between autonomous vehicles at a narrow bridge.',
+      date: '2025',
+      order: 1,
+      featured: true,
+      techStack: JSON.stringify(['Python', 'SUMO', 'OpenDRIVE', 'TraCI']),
+      problemMd: '_To be written via admin._',
+      solutionMd: '_To be written via admin._',
+      architectureMd: '',
+      impactMd: '',
+      chatPrompt: 'Tell me about your V2V negotiation research.',
+    },
+    update: {},
+  });
+
+  // Seed V2V supervisor link if the project has no links yet.
+  const v2vLinks = await prisma.projectLink.count({
+    where: { projectId: v2v.id },
+  });
+  if (v2vLinks === 0) {
+    await prisma.projectLink.create({
+      data: {
+        projectId: v2v.id,
+        label: 'Supervisor — Prof. Dongmo Zhang',
+        url: 'https://scholar.google.com/citations?user=Mgqp7NMAAAAJ&hl=en',
+        iconName: 'GraduationCap',
+        order: 0,
+      },
+    });
+  }
+
+  // No-op read to keep ts-happy about unused const when everything succeeds.
+  void gpa;
+
   // --- Stack items (day-to-day tools) ---
   await prisma.stackItem.deleteMany();
   await prisma.stackItem.createMany({

@@ -39,3 +39,29 @@ export async function getStackItems() {
     orderBy: [{ category: 'asc' }, { order: 'asc' }],
   });
 }
+
+export async function getProjects() {
+  return prisma.project.findMany({
+    where: { featured: true },
+    orderBy: { order: 'asc' },
+    include: {
+      images: { orderBy: { order: 'asc' } },
+      links: { orderBy: { order: 'asc' } },
+    },
+  });
+}
+
+export async function getProjectBySlug(slug: string) {
+  return prisma.project.findUnique({
+    where: { slug },
+    include: {
+      images: { orderBy: { order: 'asc' } },
+      links: { orderBy: { order: 'asc' } },
+    },
+  });
+}
+
+export async function getAllProjectSlugs() {
+  const rows = await prisma.project.findMany({ select: { slug: true } });
+  return rows.map((r) => r.slug);
+}
