@@ -53,7 +53,7 @@ const InternshipCard = () => {
           <div>
             <p className="text-foreground text-sm font-medium">Duration</p>
             <p className="text-muted-foreground text-sm">
-              3–6 months — available from September 2025
+              ICT Practicum (120 hours) or 3–6 month internship — available now
             </p>
           </div>
         </div>
@@ -61,7 +61,9 @@ const InternshipCard = () => {
           <Globe className="mt-1 h-5 w-5 text-green-500" />
           <div>
             <p className="text-foreground text-sm font-medium">Location</p>
-            <p className="text-muted-foreground text-sm">Sydney, Australia · Open to remote/hybrid</p>
+            <p className="text-muted-foreground text-sm">
+              Sydney, Australia · Mon, Wed &amp; Sat on site · Open to remote/hybrid
+            </p>
           </div>
         </div>
 
@@ -72,15 +74,15 @@ const InternshipCard = () => {
             <p className="text-foreground text-sm font-medium">Tech stack</p>
             <div className="text-muted-foreground grid grid-cols-1 gap-y-1 text-sm sm:grid-cols-2">
               <ul className="list-disc pl-4">
-                <li>HTML5, CSS3, JavaScript, TypeScript</li>
-                <li>AngularJS/Angular, jQuery, Bootstrap</li>
-                <li>C#, ASP.NET MVC5, Entity Framework, LINQ</li>
-                <li>REST APIs, Node.js, PHP (Laravel)</li>
+                <li>OpenAI API, Ollama (self-hosted LLMs), function calling</li>
+                <li>n8n, OpenClaw, workflow automation</li>
+                <li>TypeScript, Node.js, Express, React, Next.js</li>
+                <li>C#, ASP.NET MVC5, Entity Framework, Python</li>
               </ul>
               <ul className="list-disc pl-4">
-                <li>MS SQL Server, MySQL, Oracle</li>
-                <li>GitHub, Trello, MS Office</li>
-                <li>Server management: Ubuntu/WHM/cPanel</li>
+                <li>MySQL, MS SQL Server, Prisma ORM</li>
+                <li>Cloudflare: DNS, Tunnel, Zero Trust</li>
+                <li>Server management: Ubuntu/systemd/WHM/cPanel</li>
                 <li>
                   <a
                     href="/chat?query=What%20are%20your%20skills%3F%20Give%20me%20a%20list%20of%20your%20soft%20and%20hard%20skills."
@@ -99,10 +101,10 @@ const InternshipCard = () => {
       <div className="mt-10">
         <p className="text-foreground mb-2 text-lg font-semibold">What I bring</p>
         <p className="text-foreground text-sm">
-          National-scale online admission system (~350k users/yr; ~BDT 20M processed).<br />
-          ZKTeco device → server API integration (no PC relay).<br />
-          Multiple Bangladesh payment gateways, SMS & Education Board APIs.<br />
-          Server & security management for e-commerce and paid platforms.
+          Production AI at my current job: customer chatbot with live order lookups, AI marketing emails, email-triage agents.<br />
+          Self-hosted LLM (Ollama + Gemma 12B) behind Cloudflare Zero Trust — unlimited inference, no per-token cost.<br />
+          Nine production websites, n8n and Matomo on an Ubuntu server I manage alone.<br />
+          National-scale online admission system (~350k users/yr; ~BDT 20M processed) as a .NET developer.
         </p>
       </div>
 

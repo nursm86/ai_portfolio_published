@@ -9,10 +9,10 @@ export function Resume() {
   // Resume details
   const resumeDetails = {
     title: "Nurs's Resume",
-    description: 'Full Stack Developer • AI Specialist',
+    description: 'AI & Automation Developer • Full-Stack Engineer',
     fileType: 'PDF',
-    lastUpdated: 'March 2025',
-    fileSize: '0.5 MB',
+    lastUpdated: 'August 2026',
+    fileSize: '0.1 MB',
     previewImageSrc: '/resume_preview.png',
     downloadUrl: '/resume.pdf',
   };

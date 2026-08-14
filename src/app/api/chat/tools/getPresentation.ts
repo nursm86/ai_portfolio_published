@@ -8,7 +8,7 @@ export const getPresentation = tool({
   execute: async () => {
     return {
       presentation:
-        "I'm Md. Nur Islam — a full-stack developer focused on AI, based in Sydney (from Dhaka). I’m doing a Master’s in AI (Cybersecurity) at Western Sydney University with 4+ years of software engineering experience. For my current workspace, I build WordPress plugins, manage servers,obsessed with AI-powered products.",
+        "I'm Md. Nur Islam — a full-stack developer focused on AI, based in Sydney (from Dhaka). I'm doing a Master's in AI (Cybersecurity) at Western Sydney University, and I work as an Automation & DevOps Engineer at a Sydney company where I run nine production websites and build AI that ships: customer chatbots, marketing automation in n8n, email-triage agents, and a self-hosted LLM behind Cloudflare Zero Trust. Before Sydney I spent 3 years as a .NET developer building Bangladesh's national online admission system.",
     };
   },
 });

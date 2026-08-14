@@ -19,7 +19,7 @@ export function Presentation() {
     age: `${ageNum} years old`,
     location: 'Sydney, Australia',
     description:
-      "Hey 👋\nI'm Nur — a full-stack developer focused on AI, based in Sydney (from Dhaka). I’m doing a Master’s in AI (Cybersecurity) at Western Sydney University. I build WordPress plugins, manage servers. I love shipping simple, AI-powered products.",
+      "Hey 👋\nI'm Nur — a full-stack developer focused on AI, based in Sydney (from Dhaka). I'm doing a Master's in AI (Cybersecurity) at Western Sydney University, and I work as an Automation & DevOps Engineer building AI that ships: chatbots, n8n workflows, email-triage agents and self-hosted LLMs. I love shipping simple, AI-powered products.",
     src: '/profile_pic.jpeg',
     fallbackSrc:
       'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3',

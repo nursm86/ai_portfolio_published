@@ -35,11 +35,11 @@ pnpm-debug.log*
 .idea/
 .env.production
 /\!published
+/hex_game
 
-# Generated Prisma client (rebuilt on every npm install via postinstall)
 /src/generated/prisma
 
-# Prisma SQLite database file (live content lives here, NOT in git)
+# Prisma SQLite database file (content lives here, NOT in git)
 /prisma/portfolio.db
 /prisma/portfolio.db-journal
 /prisma/*.db
@@ -49,6 +49,10 @@ pnpm-debug.log*
 # admin edits. data/bio.default.md IS in git as the template fallback.
 /data/bio.md
 
-# TypeScript incremental build cache
-tsconfig.tsbuildinfo
+# Playwright storage state (session cookies, localStorage) for capturing
+# auth-protected sites. NEVER commit — contains live login state.
+/data/auth
 /graphify-out
+
+# Playwright storage state with live session tokens — never commit
+/data/auth/
